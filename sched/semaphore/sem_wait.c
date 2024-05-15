@@ -166,7 +166,7 @@ int nxsem_wait(FAR sem_t *sem)
       /* Add the task to the specified blocked task list */
 
       rtcb->task_state = TSTATE_WAIT_SEM;
-      nxsched_add_prioritized(rtcb, SEM_WAITLIST(sem));
+      nxsched_add_prioritized(rtcb, SEM_WAITLIST(sem),false);
 
       /* Now, perform the context switch if one is needed */
 

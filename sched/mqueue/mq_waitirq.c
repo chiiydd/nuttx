@@ -103,7 +103,7 @@ void nxmq_wait_irq(FAR struct tcb_s *wtcb, int errcode)
    * perform the context switch if one is needed
    */
 
-  if (nxsched_add_readytorun(wtcb))
+  if (nxsched_add_readytorun(wtcb,false))
     {
       up_switch_context(wtcb, rtcb);
     }

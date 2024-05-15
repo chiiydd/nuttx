@@ -95,7 +95,7 @@ void nxtask_activate(FAR struct tcb_s *tcb)
    * perform the context switch if one is needed
    */
 
-  if (nxsched_add_readytorun(tcb))
+  if (nxsched_add_readytorun(tcb,false))
     {
       up_switch_context(tcb, rtcb);
     }

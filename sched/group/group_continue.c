@@ -73,7 +73,7 @@ static int group_continue_handler(pid_t pid, FAR void *arg)
        * perform the context switch if one is needed
        */
 
-      if (nxsched_add_readytorun(rtcb))
+      if (nxsched_add_readytorun(rtcb,false))
         {
           up_switch_context(rtcb, tcb);
         }

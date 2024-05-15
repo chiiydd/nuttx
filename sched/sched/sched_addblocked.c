@@ -77,7 +77,7 @@ void nxsched_add_blocked(FAR struct tcb_s *btcb, tstate_t task_state)
     {
       /* Add the task to a prioritized list */
 
-      nxsched_add_prioritized(btcb, tasklist);
+      nxsched_add_prioritized(btcb, tasklist,false);
     }
   else
     {

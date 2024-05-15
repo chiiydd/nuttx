@@ -134,7 +134,7 @@ static int msgrcv_wait(FAR struct msgq_s *msgq, FAR struct msgbuf_s **rcvmsg,
       /* Add the task to the specified blocked task list */
 
       rtcb->task_state = TSTATE_WAIT_MQNOTEMPTY;
-      nxsched_add_prioritized(rtcb, MQ_WNELIST(msgq->cmn));
+      nxsched_add_prioritized(rtcb, MQ_WNELIST(msgq->cmn),false);
 
       /* Now, perform the context switch if one is needed */
 
@@ -269,7 +269,7 @@ ssize_t msgrcv(int msqid, FAR void *msgp, size_t msgsz, long msgtyp,
        * perform the context switch if one is needed
        */
 
-      if (nxsched_add_readytorun(btcb))
+      if (nxsched_add_readytorun(btcb,false))
         {
           up_switch_context(btcb, rtcb);
         }

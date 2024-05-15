@@ -171,7 +171,7 @@ int nxsem_post(FAR sem_t *sem)
            * perform the context switch if one is needed
            */
 
-          if (nxsched_add_readytorun(stcb))
+          if (nxsched_add_readytorun(stcb,false))
             {
               up_switch_context(stcb, rtcb);
             }

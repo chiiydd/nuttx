@@ -45,6 +45,7 @@
  * Input Parameters:
  *   tcb - Points to the TCB to add to the prioritized list
  *   list - Points to the prioritized list to add tcb to
+ *   at_head - Whether  add the tcb at the head of the prioritized list
  *
  * Returned Value:
  *   true if the head of the list has changed.
@@ -62,7 +63,7 @@
  *
  ****************************************************************************/
 
-bool nxsched_add_prioritized(FAR struct tcb_s *tcb, DSEG dq_queue_t *list)
+bool nxsched_add_prioritized(FAR struct tcb_s *tcb, DSEG dq_queue_t *list,bool at_head)
 {
   FAR struct tcb_s *next;
   FAR struct tcb_s *prev;
@@ -77,9 +78,17 @@ bool nxsched_add_prioritized(FAR struct tcb_s *tcb, DSEG dq_queue_t *list)
    * Each is list is maintained in descending sched_priority order.
    */
 
-  for (next = (FAR struct tcb_s *)list->head;
+  if(at_head)
+  {
+    for (next = (FAR struct tcb_s *)list->head;
+        (next && sched_priority < next->sched_priority);
+        next = next->flink);
+  }else
+  {
+      for (next = (FAR struct tcb_s *)list->head;
        (next && sched_priority <= next->sched_priority);
        next = next->flink);
+  }
 
   /* Add the tcb to the spot found in the list.  Check if the tcb
    * goes at the end of the list. NOTE:  This could only happen if list

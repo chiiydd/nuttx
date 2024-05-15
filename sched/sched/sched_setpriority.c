@@ -153,8 +153,7 @@ static inline void nxsched_running_setpriority(FAR struct tcb_s *tcb,
               bool check = nxsched_remove_readytorun(nxttcb, false);
               DEBUGASSERT(check == false);
               UNUSED(check);
-
-              nxsched_add_prioritized(nxttcb, list_pendingtasks());
+              nxsched_add_prioritized(nxttcb, list_pendingtasks(),false);
               nxttcb->task_state = TSTATE_TASK_PENDING;
 
 #ifdef CONFIG_SMP
@@ -286,7 +285,7 @@ static void nxsched_readytorun_setpriority(FAR struct tcb_s *tcb,
        * end up at the head of the list.
        */
 
-      check = nxsched_add_readytorun(tcb);
+      check = nxsched_add_readytorun(tcb,false);
       DEBUGASSERT(check == false);
       UNUSED(check);
     }
@@ -324,12 +323,12 @@ static inline void nxsched_blocked_setpriority(FAR struct tcb_s *tcb,
       dq_rem((FAR dq_entry_t *)tcb, tasklist);
 
       /* Change the task priority */
-
+      int old_priority=tcb->sched_priority;
       tcb->sched_priority = (uint8_t)sched_priority;
 
       /* Put it back into the prioritized list at the correct position. */
 
-      nxsched_add_prioritized(tcb, tasklist);
+      nxsched_add_prioritized(tcb, tasklist,sched_priority<old_priority);
     }
 
   /* CASE 3b. The task resides in a non-prioritized list. */

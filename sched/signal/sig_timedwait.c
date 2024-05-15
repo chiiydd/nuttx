@@ -119,7 +119,7 @@ static void nxsig_timeout(wdparm_t arg)
        * perform the context switch if one is needed
        */
 
-      if (nxsched_add_readytorun(wtcb))
+      if (nxsched_add_readytorun(wtcb,false))
         {
           up_switch_context(wtcb, rtcb);
         }
@@ -189,7 +189,7 @@ void nxsig_wait_irq(FAR struct tcb_s *wtcb, int errcode)
        * perform the context switch if one is needed
        */
 
-      if (nxsched_add_readytorun(wtcb))
+      if (nxsched_add_readytorun(wtcb,false))
         {
           up_switch_context(wtcb, rtcb);
         }

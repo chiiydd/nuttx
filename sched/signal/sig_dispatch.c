@@ -418,7 +418,7 @@ int nxsig_tcbdispatch(FAR struct tcb_s *stcb, siginfo_t *info)
            * perform the context switch if one is needed
            */
 
-          if (nxsched_add_readytorun(stcb))
+          if (nxsched_add_readytorun(stcb,false))
             {
               up_switch_context(stcb, rtcb);
             }
@@ -485,7 +485,7 @@ int nxsig_tcbdispatch(FAR struct tcb_s *stcb, siginfo_t *info)
            * perform the context switch if one is needed
            */
 
-          if (nxsched_add_readytorun(stcb))
+          if (nxsched_add_readytorun(stcb,false))
             {
               up_switch_context(stcb, rtcb);
             }
@@ -549,7 +549,7 @@ int nxsig_tcbdispatch(FAR struct tcb_s *stcb, siginfo_t *info)
            * perform the context switch if one is needed
            */
 
-          if (nxsched_add_readytorun(stcb))
+          if (nxsched_add_readytorun(stcb,false))
             {
               up_switch_context(stcb, rtcb);
             }

@@ -276,7 +276,7 @@ int nxmq_wait_send(FAR struct mqueue_inode_s *msgq, int oflags)
       /* Add the task to the specified blocked task list */
 
       rtcb->task_state = TSTATE_WAIT_MQNOTFULL;
-      nxsched_add_prioritized(rtcb, MQ_WNFLIST(msgq->cmn));
+      nxsched_add_prioritized(rtcb, MQ_WNFLIST(msgq->cmn),false);
 
       /* Now, perform the context switch if one is needed */
 
@@ -434,7 +434,7 @@ int nxmq_do_send(FAR struct mqueue_inode_s *msgq,
        * perform the context switch if one is needed
        */
 
-      if (nxsched_add_readytorun(btcb))
+      if (nxsched_add_readytorun(btcb,false))
         {
           up_switch_context(btcb, rtcb);
         }

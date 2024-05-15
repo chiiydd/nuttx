@@ -65,7 +65,7 @@
  ****************************************************************************/
 
 #ifndef CONFIG_SMP
-bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
+bool nxsched_add_readytorun(FAR struct tcb_s *btcb,bool priority_smaller)
 {
   FAR struct tcb_s *rtcb = this_task();
   bool ret;
@@ -82,14 +82,14 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
        * g_pendingtasks task list for now.
        */
 
-      nxsched_add_prioritized(btcb, list_pendingtasks());
+      nxsched_add_prioritized(btcb, list_pendingtasks(),priority_smaller);
       btcb->task_state = TSTATE_TASK_PENDING;
       ret = false;
     }
 
   /* Otherwise, add the new task to the ready-to-run task list */
 
-  else if (nxsched_add_prioritized(btcb, list_readytorun()))
+  else if (nxsched_add_prioritized(btcb, list_readytorun()),priority_smaller)
     {
       /* The new btcb was added at the head of the ready-to-run list.  It
        * is now the new active task!
@@ -132,6 +132,7 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
  *
  * Input Parameters:
  *   btcb - Points to the blocked TCB that is ready-to-run
+ *   priority_smaller - true if the task's priority is  set smaller that its old priority
  *
  * Returned Value:
  *   true if the currently active task (the head of the ready-to-run list)
@@ -149,7 +150,7 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
  ****************************************************************************/
 
 #ifdef CONFIG_SMP
-bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
+bool nxsched_add_readytorun(FAR struct tcb_s *btcb,bool priority_smaller)
 {
   FAR struct tcb_s *rtcb;
   FAR dq_queue_t *tasklist;
@@ -214,7 +215,7 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
        * now.
        */
 
-      nxsched_add_prioritized(btcb, list_pendingtasks());
+      nxsched_add_prioritized(btcb, list_pendingtasks(),false);
       btcb->task_state = TSTATE_TASK_PENDING;
       doswitch         = false;
     }
@@ -228,7 +229,7 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
        * Add the task to the ready-to-run (but not running) task list
        */
 
-      nxsched_add_prioritized(btcb, list_readytorun());
+      nxsched_add_prioritized(btcb, list_readytorun(),priority_smaller);
 
       btcb->task_state = TSTATE_TASK_READYTORUN;
       doswitch         = false;
@@ -249,7 +250,7 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
        */
 
       tasklist = list_assignedtasks(cpu);
-      switched = nxsched_add_prioritized(btcb, tasklist);
+      switched = nxsched_add_prioritized(btcb, tasklist,priority_smaller);
 
       /* If the selected task list was the g_assignedtasks[] list and if the
        * new tasks is the highest priority (RUNNING) task, then a context
@@ -330,7 +331,7 @@ bool nxsched_add_readytorun(FAR struct tcb_s *btcb)
                   tasklist         = list_readytorun();
                 }
 
-              nxsched_add_prioritized(next, tasklist);
+              nxsched_add_prioritized(next, tasklist,false);
             }
 
           doswitch = true;

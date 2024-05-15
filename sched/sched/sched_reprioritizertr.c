@@ -64,6 +64,9 @@ bool nxsched_reprioritize_rtr(FAR struct tcb_s *tcb, int priority)
 
   switch_needed = nxsched_remove_readytorun(tcb, false);
 
+  /* Compare the new priority with old */
+  int priority_smaller=priority<tcb->sched_priority;
+
   /* Setup up the new task priority */
 
   tcb->sched_priority = (uint8_t)priority;
@@ -76,7 +79,7 @@ bool nxsched_reprioritize_rtr(FAR struct tcb_s *tcb, int priority)
    * ready-to-run list).
    */
 
-  switch_needed ^= nxsched_add_readytorun(tcb);
+  switch_needed ^= nxsched_add_readytorun(tcb,priority_smaller);
 
   /* If we are going to do a context switch, then now is the right
    * time to add any pending tasks back into the ready-to-run list.

@@ -229,7 +229,7 @@ bool nxsched_merge_pending(void)
 
           /* Add the pending task to the correct ready-to-run list. */
 
-          ret |= nxsched_add_readytorun(tcb);
+          ret |= nxsched_add_readytorun(tcb,false);
 
           /* This operation could cause the scheduler to become locked.
            * Check if that happened.
